@@ -73,3 +73,58 @@ def inizio():
     tubi = []
     fra_i_tubi = False
     tubi.append(Tubi())
+
+def perso():
+    disegna_oggetti()
+    screen.blit(gameover,(50,180))
+    aggiorna()
+    rinizio = False
+    while not rinizio:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                inizio()
+                rinizio = True
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+inizio()
+
+while True:
+    basex -= vel_avanz
+    if basex < -45:
+        basex = 0
+    uccello_vely += 1
+    uccelloy += uccello_vely
+
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+            uccello_vely = -10
+
+        if event.type == QUIT:
+            pygame.quit()
+
+    if tubi[-1].x < 100 :
+        tubi.append(Tubi())
+    
+    for t in tubi:
+        t.collisione(uccello,uccellox,uccelloy)
+    
+    if not fra_i_tubi:
+        for t in tubi:
+            if t.fra_i_tubi(uccello,uccellox):
+                fra_i_tubi = True
+                break
+    
+    if fra_i_tubi:
+        fra_i_tubi = False
+        for t in tubi:
+            if t.fra_i_tubi(uccello,uccellox):
+                fra_i_tubi = True
+                break
+        if not fra_i_tubi:
+            punti += 1
+    if uccelloy > 380:
+        perso()
+
+    disegna_oggetti()
+    aggiorna()
